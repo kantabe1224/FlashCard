@@ -9,7 +9,7 @@
 
 3. 問題をAndroid端末に格納
  carddata.txt
- Glaxy S SC-02B だと
+ Glaxy S SC-02B (Android 2.3.6) だと
    /mnt/sdcard/carddata.txt
  に格納する。(Environment.getExternalStorageDirectory()で取得されるパス以下)
  ファイル名は、ソース中で固定文字列なので変更不可。
