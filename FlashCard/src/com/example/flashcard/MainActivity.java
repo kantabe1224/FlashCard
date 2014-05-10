@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -145,6 +146,7 @@ public class MainActivity extends Activity {
 		question_size = questions.size();
 		page_size = question_size * 2;
 
+		ScrollView sv = (ScrollView) findViewById(id.scrollview1);
 		TextView tv = (TextView) findViewById(id.textview1);
 		current_q = current_page / 2;
 		if (current_page % 2 == 0) {
@@ -154,20 +156,28 @@ public class MainActivity extends Activity {
 		}
 		
 
-		tv.setOnTouchListener(new View.OnTouchListener() {
+		sv.setOnTouchListener(new View.OnTouchListener() {
 			private float lastTouchX;
+			private float lastTouchY;
 			private float currentX;
-
+			private float currentY;
+			private float deltaX;
+			private float deltaY;
+			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO 自動生成されたメソッド・スタブ
 				switch( event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					lastTouchX = event.getX();
+					lastTouchY = event.getY();
 					break;
 				case MotionEvent.ACTION_UP:
 					currentX = event.getX();
-					if (lastTouchX < currentX) {
+					currentY = event.getY();
+					deltaX = currentX - lastTouchX;
+					deltaY = currentY - lastTouchY;
+					if ((0 < deltaX) && (Math.abs(deltaX) > Math.abs(deltaY))) {
 						TextView tv = (TextView) findViewById(id.textview1);
 						current_page = ((current_page - 1) + page_size) % page_size;
 						current_q = current_page / 2;
@@ -176,7 +186,7 @@ public class MainActivity extends Activity {
 						} else {
 							tv.setText(questions.get(current_q).q + "\n\n" + questions.get(current_q).a);
 						}
-					} else if (currentX < lastTouchX) {
+					} else if ((deltaX < 0) && (Math.abs(deltaX) > Math.abs(deltaY))) {
 						TextView tv = (TextView) findViewById(id.textview1);
 						current_page = ((current_page + 1) + page_size) % page_size;
 						current_q = current_page / 2;
@@ -189,7 +199,10 @@ public class MainActivity extends Activity {
 					break;
 				case MotionEvent.ACTION_CANCEL:
 					currentX = event.getX();
-					if (lastTouchX < currentX) {
+					currentY = event.getY();
+					deltaX = currentX - lastTouchX;
+					deltaY = currentY - lastTouchY;
+					if ((0 < deltaX) && (Math.abs(deltaX) > Math.abs(deltaY))) {
 						TextView tv = (TextView) findViewById(id.textview1);
 						current_page = ((current_page - 1) + page_size) % page_size;
 						current_q = current_page / 2;
@@ -198,7 +211,7 @@ public class MainActivity extends Activity {
 						} else {
 							tv.setText(questions.get(current_q).q + "\n\n" + questions.get(current_q).a);
 						}
-					} else if (currentX < lastTouchX) {
+					} else if ((deltaX < 0) && (Math.abs(deltaX) > Math.abs(deltaY))) {
 						TextView tv = (TextView) findViewById(id.textview1);
 						current_page = ((current_page + 1) + page_size) % page_size;
 						current_q = current_page / 2;
@@ -210,7 +223,8 @@ public class MainActivity extends Activity {
 					}
 					break;
 				}
-				return true;
+//				return true;
+				return false;
 			}
 		});
 	}
